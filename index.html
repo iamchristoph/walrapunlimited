@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Walrap Unlimited</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
+    <style>
+        body{
+            padding-top: 51px;
+            background: black;
+            color: #ffffff;
+        }
+        #sidebar {
+            height: 100%;
+            padding-right: 0;
+            padding-top: 20px;
+        }
+        #sidebar .nav {
+            width: 95%;
+        }
+        #sidebar li {
+            color: #ffffff;
+            border:0 #f2f2f2 solid;
+            border-bottom-width:1px;
+        }
+
+        img{
+            margin: 5px 5px;
+        }
+
+        /* collapsed sidebar styles */
+        @media screen and (max-width: 767px) {
+            .row-offcanvas {
+                position: relative;
+                -webkit-transition: all 0.25s ease-out;
+                -moz-transition: all 0.25s ease-out;
+                transition: all 0.25s ease-out;
+            }
+            .row-offcanvas-right
+            .sidebar-offcanvas {
+                right: -41.6%;
+            }
+
+            .row-offcanvas-left
+            .sidebar-offcanvas {
+                left: -41.6%;
+            }
+            .row-offcanvas-right.active {
+                right: 41.6%;
+            }
+            .row-offcanvas-left.active {
+                left: 41.6%;
+            }
+            .sidebar-offcanvas {
+                position: absolute;
+                top: 0;
+                width: 41.6%;
+            }
+            #sidebar {
+                padding-top:0;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="page-container">
+                <!-- top navbar -->
+                <div class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".sidebar-nav">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" id="home">Walrap Unlimited</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="row row-offcanvas row-offcanvas-left">
+
+                        <!-- sidebar -->
+                        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+                            <ul class="nav">
+                                <li class="active"><a id="aboutConcrete">About Concrete <span class="sr-only">(current)</span></a></li>
+                                <li><a href="#">Colored & Stamped</a></li>
+                                <li><a href="#">Driveways and Parking Lots</a></li>
+                                <li><a href="#">Patios, Steps & Walks</a></li>
+                                <li><a href="#">Basement Walkouts</a></li>
+                                <li><a href="#">Floors</a></li>
+                                <li><a href="#">Contact</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Action</a></li>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="#">Separated link</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="#">One more separated link</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <form class="navbar-form navbar-left" role="search">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Search">
+                                </div>
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </form>
+                        </div>
+
+                        <!-- main area -->
+                        <div class="col-xs-12 col-sm-9">
+                            <div id="heading"></div>
+                            <div id="content">
+                                <h1>Walrap Unlimited</h1>
+                                <h2>Concrete Specialists</h2>
+                                <img src="logo.png">
+                            </div>
+                        </div><!-- /.col-xs-12 main -->
+                    </div><!--/.row-->
+                </div><!--/.container-->
+            </div>
+</body>
+
+<script>
+    $(document).ready(function() {
+        function getContent(name){
+            $.getJSON(name, function(data) {
+                var res = "";
+                console.log(data);
+                $('#heading').html(`<h1>${data.heading}</h1>`);
+                $.each(data.content, function (i, par) {
+                    if (par.hasOwnProperty('heading')) {
+                        res += `<h2>${par.heading}</h2>`;
+                    }
+                    if (par.hasOwnProperty('content')) {
+                        res += `<p>${par.content}</p>`;
+                    }
+                });
+                $('#content').append(res);
+            });
+        }
+        $('#home').click(function() {
+            $('#content').html(`<img class="img-responsive" src="./images/StampedBridge.jpg">`);
+            getContent("ajax/home.json");
+        });
+
+        $('#aboutConcrete').click(function() {
+            $('#content').html(`<img class="img-responsive pull-right" src="./images/dwPour.jpg" alt="Mike pouring a concrete driveway"><img class="img-responsive pull-right" src="./images/dwFinish.jpg" alt="Mike finishing a concrete driveway">`);
+            getContent("ajax/aboutConcrete.json");
+        });
+        
+        $('[data-toggle=offcanvas]').click(function() {
+            $('.row-offcanvas').toggleClass('active');
+        });
+    });
+
+</script>
+
+</html>
